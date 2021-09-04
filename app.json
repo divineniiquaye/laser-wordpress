@@ -7,6 +7,11 @@
     "success_url": "/wp/wp-admin",
     "stack": "heroku-20",
     "env": {
+      "APP_IN_CLOUD": {
+        "description": "Name of the cloud the app is deployed into, in this case heroku.",
+        "value": "heroku",
+        "required": true
+      },
       "AUTH_KEY": {
         "description": "A secret key to increase security of stored information.",
         "generator": "secret"
@@ -42,6 +47,10 @@
       "HEROKU_APP_NAME": {
         "required": false,
         "description": "Only for automated deploys, please don't enter anything!"
+      },
+      "HEROKU_ENVIRONMENT": {
+        "description": "The Default environment used by the application.",
+        "value": "production"
       }
     },
     "formation": {
