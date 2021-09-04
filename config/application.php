@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Your base production configuration goes in this file. Environment-specific
  * overrides go in their respective config/environments/{{WP_ENV}}.php file.
@@ -33,21 +34,10 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROT
     $_SERVER['HTTPS'] = 'on';
 }
 
-$_http_host_schema = array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
-$_http_host_name = array_key_exists('HTTP_HOST', $_SERVER) ? $_SERVER['HTTP_HOST'] : 'localhost';
-$_server_http_url = $_http_host_schema."://".$_http_host_name;
-
-/**
- * Application's website, make app on all domain deployed to or pointed at using CNAME.
- */
 /**
  * Gets the request URI from the given server environment
  *
- * MUST NOT be used outside of this package.
- *
- * @param array $server
- *
- * @return UriInterface
+ * @param array<string,mixed> $server
  *
  * @link http://php.net/manual/en/reserved.variables.server.php
  */
@@ -64,7 +54,7 @@ function request_uri(array $server, bool $path = false) : string
     } elseif (\array_key_exists('SERVER_NAME', $server)) {
         $domain = $server['SERVER_NAME'];
 
-        if (\array_key_exists('SERVER_PORT', $server)) {
+        if (\array_key_exists('SERVER_PORT', $server) && env('INCLUDE_SERVER_PORT')) {
             $domain .= ':' . $server['SERVER_PORT'];
         }
     }
@@ -133,13 +123,13 @@ if (env('IRON_WORKER_PROJECT_ID') && env('IRON_WORKER_TOKEN')) {
  * Set up our global environment constant and load its config first
  * Default: production
  */
-define('WP_ENV', env('WP_ENV') ?: 'production');
+define('WP_ENV', env('WP_ENV') ?? 'production');
 
 /**
  * URLs
  */
-Config::define('WP_HOME', env('WP_HOME') ?? $siteUrl);
-Config::define('WP_SITEURL', env('WP_SITEURL') ?? ($siteUrl . '/wp'));
+Config::define('WP_HOME', $siteUrl = env('WP_HOME') ?? request_uri($_SERVER));
+Config::define('WP_SITEURL', env('WP_SITEURL') ?? $siteUrl . '/wp');
 
 /**
  * Custom Content Directory
