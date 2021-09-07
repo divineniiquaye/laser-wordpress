@@ -10,7 +10,7 @@ use function Env\env;
 $jawsDB_url = env('JAWSDB_URL') ?? env('JAWSDB_MARIA_URL');
 
 if (!empty($jawsDB_url)) {
-    $_ENV['DATABASE_URL='] = $jawsDB_url;
+    $_ENV['DATABASE_URL'] = $jawsDB_url;
 }
 
 unset($jawsDB_url);
